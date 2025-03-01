@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import requests
-import io
 
 # Streamlit UI
 st.title("Machine Learning Web App")
@@ -21,10 +20,10 @@ if uploaded_file is not None:
     st.write(df.head())
 
     # Send file to Flask backend
-    files = {"file": ("dataset.csv", uploaded_file.getvalue(), "text/csv")}
-    response = requests.post("http://127.0.0.1:5000/upload", files=files)
+    files = {"file": uploaded_file}  # Fixing the key to match Flask
+    response = requests.post("http://127.0.0.1:5000/uploads", files=files)  # Ensure endpoint matches Flask
 
     if response.status_code == 200:
         st.success("File successfully sent to backend!")
     else:
-        st.error("Error uploading file.")
+        st.error(f"Error uploading file: {response.text}")
